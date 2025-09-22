@@ -13,7 +13,6 @@ echo "TMP dir at: $HOST_BASE"
 mkdir -p "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP"
 # note: for many nix operations the store dir is expected to be root-owned.
 # If tests fail with permission errors, run with sudo or adjust ownership.
-echo "HOST_BASE=$HOST_BASE" >> log.txt
 
 # create sample dataset
 INCOMING="$HOST_TMP/incoming"
@@ -25,7 +24,7 @@ echo "file B" > "$INCOMING/B.txt"
 cp "$(dirname "$0")/add_dataset.sh" "$HOST_TMP/"
 
 # run add_dataset inside container
-RESULT=$(bash $(dirname "$0")/run_in_container.sh "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset")
+RESULT=$(bash $(dirname "$0")/run_in_container.sh "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/incoming /nix-datasets /pins mydataset")
 echo "Result: $RESULT"
 DATASET_STORE=$(echo "$RESULT" | cut -d'|' -f1)
 PIN_NAME=$(echo "$RESULT" | cut -d'|' -f2)
@@ -40,6 +39,6 @@ if [ ! -L "$HOST_PINS/$PIN_NAME" ]; then
 fi
 
 # verify nix-store knows the requisites (files)
-bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /tool --query --requisites $DATASET_STORE" | sed -n '1,200p'
+bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --query --requisites $DATASET_STORE" | sed -n '1,200p'
 
 echo "NDS_AC_001 passed: dataset added, pinned, and reports requisites."

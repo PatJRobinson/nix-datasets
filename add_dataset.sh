@@ -22,7 +22,6 @@ dataset_store=$(nix-store --add-fixed --recursive sha256 --store $NIX_STORE_DIR 
 ts=$(date -u +%Y%m%dT%H%M%SZ)
 PIN_NAME="${NAME}-${ts}"
 mkdir -p "$PINS_DIR"
-#ln -s "/tool/$dataset_store" "$PINS_DIR/$PIN_NAME"
 pin_name_res=$(nix-store --store $NIX_STORE_DIR --realise $dataset_store --add-root "$PINS_DIR/$PIN_NAME" --indirect  || true)
 
 echo "$dataset_store|$PIN_NAME"

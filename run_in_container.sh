@@ -25,10 +25,9 @@ fi
 
 # Join the remaining args into a single command string
 CMD="$*"
-echo "COMMAND WAS: $CMD" >> log.txt
 docker run --rm \
-  -v "${HOST_STORE}":/tool/nix/store \
-  -v "${HOST_VAR}":/tool/nix/var \
+  -v "${HOST_STORE}":/nix-datasets/nix/store \
+  -v "${HOST_VAR}":/nix-datasets/nix/var \
   -v "${HOST_PINS}":/pins \
   -v "${HOST_TMP}":/tmp \
   nix-with-bash \
