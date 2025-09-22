@@ -1,0 +1,18 @@
+HOST_BASE=/tmp/nds-test-zIxiiQ
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --query --requisites /nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
+HOST_BASE=/tmp/nds-test-gU5sc2
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --query --requisites /tool/nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
+HOST_BASE=/tmp/nds-test-O72boS
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --store /tool --query --requisites /nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
+HOST_BASE=/tmp/nds-test-qiWyFb
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --store /tool --query --requisites /nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
+HOST_BASE=/tmp/nds-test-3Qz4vA
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --store /tool --query --requisites /nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
+HOST_BASE=/tmp/nds-test-Rr63It
+COMMAND WAS: /tmp/add_dataset.sh /tmp/incoming /tool /pins mydataset
+COMMAND WAS: nix-store --store /tool --query --requisites /nix/store/x12drhhq4jaz8j17qdk8yqfghqcb006f-symlink_tree
