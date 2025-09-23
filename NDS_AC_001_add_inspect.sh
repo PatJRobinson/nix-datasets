@@ -34,11 +34,11 @@ echo "Pin: $PIN_NAME"
 
 # verify pin exists on host
 if [ ! -L "$HOST_PINS/$PIN_NAME" ]; then
-  echo "Pin symlink missing: $HOST_PINS/$PIN_NAME" >&2
+  echo "❌ Pin symlink missing: $HOST_PINS/$PIN_NAME" >&2
   exit 1
 fi
 
 # verify nix-store knows the requisites (files)
 bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --query --requisites $DATASET_STORE" | sed -n '1,200p'
 
-echo "NDS_AC_001 passed: dataset added, pinned, and reports requisites."
+echo "✅ NDS_AC_001 passed: dataset added, pinned, and reports requisites."
