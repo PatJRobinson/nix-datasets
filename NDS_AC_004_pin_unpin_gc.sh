@@ -11,13 +11,13 @@ mkdir -p "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP"
 cp "$(dirname "$0")/add_dataset.sh" "$HOST_TMP/"
 
 # create two versions
-IN1="$HOST_BASE/in1"; mkdir -p "$IN1"; echo "A" > "$IN1/a.txt"
-RES1=$(bash -c "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in1 /pins mydataset")
+IN1="$HOST_TMP/in1"; mkdir -p "$IN1"; echo "A" > "$IN1/a.txt"
+RES1=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in1 /nix-datasets /pins mydataset")
 S1=$(echo "$RES1" | cut -d'|' -f1)
 PIN1=$(echo "$RES1" | cut -d'|' -f2)
 
-IN2="$HOST_BASE/in2"; mkdir -p "$IN2"; echo "B" > "$IN2/b.txt"
-RES2=$(bash -c "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in2 /pins mydataset")
+IN2="$HOST_TMP/in2"; mkdir -p "$IN2"; echo "B" > "$IN2/b.txt"
+RES2=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in2 /nix-datasets /pins mydataset")
 S2=$(echo "$RES2" | cut -d'|' -f1)
 PIN2=$(echo "$RES2" | cut -d'|' -f2)
 
@@ -25,7 +25,7 @@ PIN2=$(echo "$RES2" | cut -d'|' -f2)
 rm -f "$HOST_PINS/$PIN1"
 
 # run GC inside container (danger: this will prune unreferenced store items in host_store)
-bash -c "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-collect-garbage -d" || true
+bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-collect-garbage -d" 
 
 # check S1 removed
 if [ -e "$HOST_STORE/$(basename "$S1")" ]; then

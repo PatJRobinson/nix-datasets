@@ -39,6 +39,8 @@ if [ ! -L "$HOST_PINS/$PIN_NAME" ]; then
 fi
 
 # verify nix-store knows the requisites (files)
-bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --query --requisites $DATASET_STORE" | sed -n '1,200p'
+bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" \
+  "nix-store --store /nix-datasets --query --requisites $DATASET_STORE" | \
+  { n=0; while IFS= read -r line && [ "$n" -lt 200 ]; do printf '%s\n' "$line"; n=$((n+1)); done; }
 
 echo "✅ NDS_AC_001 passed: dataset added, pinned, and reports requisites."

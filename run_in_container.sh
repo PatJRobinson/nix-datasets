@@ -30,5 +30,5 @@ docker run --rm \
   -v "${HOST_VAR}":/nix-datasets/nix/var \
   -v "${HOST_PINS}":/pins \
   -v "${HOST_TMP}":/tmp \
-  nix-with-bash \
+  nixos/nix:latest \
   bash -c "${CMD}"

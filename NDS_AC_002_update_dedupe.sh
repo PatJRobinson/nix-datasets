@@ -22,10 +22,12 @@ cp "$(dirname "$0")/add_dataset.sh" "$HOST_TMP/"
 
 bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in1 /nix-datasets /pins mydataset"
 
-FIRST_STORE=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP " "ls -l /pins | sed -n '1p' || true" || true)
+FIRST_STORE=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" \
+  "bash -lc 'ls -l /pins 2>/dev/null | { IFS= read -r line || true; printf \"%s\n\" \"\$line\"; }' || true" || true)
 
 # capture per-file store paths by querying requisites then filtering for files (heuristic)
-DATASET_STORE=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --query --requisites /pins/* | sed -n '1,200p' | head -n 1" )
+DATASET_STORE=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" \
+  "bash -lc 'nix-store --store /nix-datasets --query --requisites /pins/* | { IFS= read -r first || true; printf \"%s\n\" \"\$first\"; }'")
 
 read A1 B1 < <(bash "$(dirname "$0")/run_in_container.sh" \
   "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" \
