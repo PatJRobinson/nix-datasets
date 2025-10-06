@@ -15,9 +15,9 @@ IN1="$HOST_TMP/in1"
 mkdir -p "$IN1"
 echo "V1" > "$IN1/x.txt"
 cp "$(dirname "$0")/add_dataset.sh" "$HOST_TMP/"
-RES1=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in1 /nix-datasets /nix-datasets /pins mydataset")
+RES1=$(bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "/tmp/add_dataset.sh /tmp/in1 /nix-datasets /pins mydataset")
 S1=$(echo "$RES1" | cut -d'|' -f1)
-sleep 1
+#sleep 1
 
 # add second version
 IN2="$HOST_TMP/in2"

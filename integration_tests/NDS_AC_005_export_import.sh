@@ -22,16 +22,18 @@ echo "S is $S"
 # export closure to nar
 OUT_NAR="$HOST_TMP/dataset.nar"
 
-bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --export \$(/tmp/list_symlink_tree.sh /nix-datasets$S | /tmp/strip_prefix.sh /nix-datasets) > /tmp/dataset.nar"
-
+bash "$(dirname "$0")/run_in_container.sh" "$HOST_STORE" "$HOST_VAR" "$HOST_PINS" "$HOST_TMP" "nix-store --store /nix-datasets --export \$(/tmp/list_symlink_tree.sh /nix-datasets$S | /tmp/strip_prefix.sh /nix-datasets)" > "$OUT_NAR"
 
 # import into a fresh store (simulate remote)
 IMPORT_STORE="$IMPORT_BASE/nix-store"
 IMPORT_VAR="$IMPORT_BASE/nix-var"
 IMPORT_PINS="$IMPORT_BASE/pins"
+PIN_NAME="$(ls $HOST_PINS | head -1)"
 mkdir -p "$IMPORT_STORE" "$IMPORT_VAR" "$IMPORT_PINS"
-# import using a container with mounts pointing to IMPORT_*
-docker run --rm -v "$IMPORT_STORE":/nix-datasets/nix/store -v "$IMPORT_VAR":/nix-datasets/nix/var -v "$IMPORT_PINS":/pins -i nixos/nix:latest sh -c "nix-store --store /nix-datasets --import" < "$OUT_NAR"
+
+# import and register pin on target in one liner (target mounts defined)
+docker run --rm -v "$IMPORT_STORE":/nix-datasets/nix/store -v "$IMPORT_VAR":/nix-datasets/nix/var -v "$IMPORT_PINS":/pins -i nixos/nix:latest \
+  sh -c "nix-store --store /nix-datasets --import && nix-store --store /nix-datasets --realise '$S' --add-root /pins/'$PIN_NAME' --indirect" < "$OUT_NAR"
 
 echo "Imported into fresh store at $IMPORT_BASE"
 echo "NDS_AC_005 done. You can inspect $IMPORT_BASE to verify imported paths."
